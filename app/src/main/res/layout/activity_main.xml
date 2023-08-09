@@ -23,11 +23,26 @@
         android:layout_gravity="center"
         android:onClick="onSubmitButtonClicked"/>
 
+    <Button
+        android:id="@+id/captionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="caption Submit"
+        android:layout_gravity="center"
+        android:onClick="onFetchCaptionsButtonClicked"/>
+
     <TextView
         android:id="@+id/displayTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text=""
+        android:text="sentiment result"
+        android:textSize="18sp"/>
+    <TextView
+        android:id="@+id/captionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="caption will show here"
         android:textSize="18sp"/>
 </LinearLayout>

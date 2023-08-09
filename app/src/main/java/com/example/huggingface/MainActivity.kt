@@ -2,6 +2,7 @@ package com.example.huggingface
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -14,7 +15,7 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
     private lateinit var inputEditText: EditText
     private lateinit var displayTextView: TextView
-    private val sentimentAnalysisAPI = SentimentAnalysisAPI()
+    private val ApiHelper = ApiHelper()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         val inputText = inputEditText.text.toString()
 
         CoroutineScope(Dispatchers.Main).launch {
-            val response: JSONArray = sentimentAnalysisAPI.query(inputText)
+            val response: JSONArray = ApiHelper.performSentimentAnalysis(inputText)
 
             if (response.length() > 0) {
                 val resultArray = response.getJSONArray(0)
@@ -36,6 +37,15 @@ class MainActivity : AppCompatActivity() {
             } else {
                 displayTextView.text = "No results"
             }
+        }
+    }
+    fun onFetchCaptionsButtonClicked(view: View) {
+        val videoId = "klTvEwg3oJ4"
+
+        CoroutineScope(Dispatchers.Main).launch {
+            val response: String = ApiHelper.fetchYouTubeCaptions(videoId)
+                displayTextView.text = response
+
         }
     }
 }
