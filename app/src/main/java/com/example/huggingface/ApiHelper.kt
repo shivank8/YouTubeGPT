@@ -14,7 +14,7 @@ import java.io.IOException
 import java.util.regex.Pattern
 
 class ApiHelper {
-    private val sentimentApiUrl = "https://api-inference.huggingface.co/models/cardiffnlp/twitter-xlm-roberta-base-sentiment"
+    private val sentimentApiUrl = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
     private val sentimentApiToken = "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"
 
     private val youtubeApiUrl = "https://youtube-video-subtitles-list.p.rapidapi.com/"
@@ -39,7 +39,7 @@ class ApiHelper {
         if (response.length() > 0) {
                 val firstObject = response.getJSONObject(0)
                 val baseUrl = firstObject.getString("baseUrl")
-                Log.e("Base url", baseUrl)
+                Log.v("Base url", baseUrl)
                 captions=fetchAndProcessCaptionsFromBaseUrl(baseUrl)
         }
         else{
@@ -67,8 +67,11 @@ class ApiHelper {
                 while (matcher.find()) {
                     outputBuilder.append(matcher.group(1).trim()).append(" ")
                 }
-                val finalCaption = outputBuilder.toString().trim()
-
+                val captions = outputBuilder.toString().trim()
+                val finalCaption = captions.replace("&amp;#(\\d+);".toRegex()) { matchResult ->
+                    val entityValue = matchResult.groupValues[1].toInt()
+                    entityValue.toChar().toString()
+                }
                 Log.v("Final Captions", finalCaption)
 
                 finalCaption

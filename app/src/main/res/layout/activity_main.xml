@@ -43,6 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:isScrollContainer="true"
         android:text="caption will show here"
         android:textSize="18sp"/>
 </LinearLayout>
