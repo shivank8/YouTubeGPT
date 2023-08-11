@@ -58,29 +58,36 @@ class ApiHelper {
             val client = OkHttpClient()
             try {
                 val response = client.newCall(request).execute()
-                val responseBody = response.body?.string() ?: ""
+                var responseBody = response.body?.string() ?: ""
+                responseBody=responseBody.substring(39)
+                Log.v("Final RESPONSE", responseBody)
 
-                val pattern = Pattern.compile("<text[^>]*>(.*?)</text>", Pattern.DOTALL)
+                val pattern = Pattern.compile("""<text start="(\d+)" dur="\d+">([^<]+)</text>""")
                 val matcher = pattern.matcher(responseBody)
 
-                val outputBuilder = StringBuilder()
-                while (matcher.find()) {
-                    outputBuilder.append(matcher.group(1).trim()).append(" ")
-                }
-                val captions = outputBuilder.toString().trim()
-                val finalCaption = captions.replace("&amp;#(\\d+);".toRegex()) { matchResult ->
-                    val entityValue = matchResult.groupValues[1].toInt()
-                    entityValue.toChar().toString()
-                }
-                Log.v("Final Captions", finalCaption)
+                val dictionary = mutableMapOf<String, Int>()
 
-                finalCaption
+                while (matcher.find()) {
+                    val start = matcher.group(1).toInt()
+                    val text = matcher.group(2)
+                    dictionary[text as String] = start
+                }
+                println(dictionary)
+                val captions = dictionary.keys.joinToString(" ")
+                val dataList = dictionary.keys.toList()
+                println(dataList)
+                Log.v("Final Captions", captions)
+
+                captions
             } catch (e: IOException) {
                 Log.e("ApiHelper", "Error fetching captions: ${e.message}")
                 ""
             }
         }
     }
+
+
+
 
     private fun buildRequest(
         apiUrl: String,
