@@ -7,9 +7,11 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.DataOutput
 import java.io.IOException
 import java.util.regex.Pattern
 
@@ -76,6 +78,8 @@ class ApiHelper {
                 val captions = dictionary.keys.joinToString(" ")
                 val dataList = dictionary.keys.toList()
                 println(dataList)
+                val query="what is the color?"
+                getVectorEmbeddings(dataList,query,dictionary)
                 Log.v("Final Captions", captions)
 
                 captions
@@ -87,7 +91,40 @@ class ApiHelper {
     }
 
 
+    suspend fun getVectorEmbeddings(dataList: List<String>, inputQuery: String,dictionary: MutableMap<String, Int>) {
+        val payload = JSONObject()
+        payload.put("inputs", JSONObject(mapOf("source_sentence" to inputQuery, "sentences" to dataList)))
+        val API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
 
+        val requestBody = payload.toString().toRequestBody("application/json".toMediaTypeOrNull())
+        val request = buildRequest(API_URL, sentimentApiToken, requestBody)
+
+        val output = performApiRequest(request)
+        println(output)
+        val embeddings = mutableListOf<Double>()
+        for (i in 0 until output.length()) {
+            embeddings.add(output.getDouble(i))
+        }
+        val topKEmbeddings = getTopKValues(embeddings, 3)
+
+        for ((index, value) in topKEmbeddings) {
+            println("Index: $index, Value: $value")
+            val text=dataList[index]
+            println(text)
+            println(dictionary[text])
+        }
+    }
+    private fun getTopKValues(values: List<Double>, top_k: Int): List<Pair<Int, Double>> {
+
+        if (top_k >= values.size) {
+            return values.mapIndexed { index, value -> Pair(index, value) }
+        }
+
+        val indexedValues = values.mapIndexed { index, value -> Pair(index, value) }
+        val sortedValues = indexedValues.sortedByDescending { it.second }
+
+        return sortedValues.subList(0, top_k)
+    }
 
     private fun buildRequest(
         apiUrl: String,
