@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Huggingface</string>
+
+    <string name="youtube_link_hint">Enter YouTube Link</string>
+    <string name="next_button">Next</string>
+    <string name="app_logo_description">App Logo</string>
 </resources>

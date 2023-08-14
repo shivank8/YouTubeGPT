@@ -23,7 +23,7 @@ class ApiHelper {
 
     private val client = OkHttpClient()
 
-    suspend fun performSentimentAnalysis(input: String): JSONArray {
+    suspend fun getSummary(input: String): JSONArray {
         val payload = JSONObject()
         payload.put("inputs", input)
 
@@ -50,7 +50,7 @@ class ApiHelper {
         return captions
     }
 
-    suspend fun fetchAndProcessCaptionsFromBaseUrl(baseUrl: String): String {
+    private suspend fun fetchAndProcessCaptionsFromBaseUrl(baseUrl: String): String {
         val request = Request.Builder()
             .url(baseUrl)
             .get()
@@ -62,8 +62,6 @@ class ApiHelper {
                 val response = client.newCall(request).execute()
                 var responseBody = response.body?.string() ?: ""
                 responseBody=responseBody.substring(39)
-                Log.v("Final RESPONSE", responseBody)
-
                 val pattern = Pattern.compile("""<text start="(\d+)" dur="\d+">([^<]+)</text>""")
                 val matcher = pattern.matcher(responseBody)
 
@@ -91,7 +89,7 @@ class ApiHelper {
     }
 
 
-    suspend fun getVectorEmbeddings(dataList: List<String>, inputQuery: String,dictionary: MutableMap<String, Int>) {
+    private suspend fun getVectorEmbeddings(dataList: List<String>, inputQuery: String, dictionary: MutableMap<String, Int>) {
         val payload = JSONObject()
         payload.put("inputs", JSONObject(mapOf("source_sentence" to inputQuery, "sentences" to dataList)))
         val API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"

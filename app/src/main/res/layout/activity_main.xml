@@ -5,45 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/primaryBackground"
     android:padding="14dp"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_launcher_foreground"
+        android:contentDescription="@string/app_logo_description"
+        android:layout_marginBottom="24dp"/>
+
     <EditText
-        android:layout_margin="28dp"
-        android:id="@+id/inputEditText"
+        android:id="@+id/youtubeLinkInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter text"/>
+        android:hint="@string/youtube_link_hint"
+        android:inputType="text"
+        android:backgroundTint="@color/primaryAccent"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/primaryText"
+        android:textColorHint="@color/secondaryText"
+        android:textSize="16sp"/>
 
     <Button
-        android:id="@+id/submitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        android:layout_gravity="center"
-        android:onClick="onSubmitButtonClicked"/>
-
-    <Button
-        android:id="@+id/captionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="caption Submit"
-        android:layout_gravity="center"
-        android:onClick="onFetchCaptionsButtonClicked"/>
-
-    <TextView
-        android:id="@+id/displayTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="sentiment result"
-        android:textSize="18sp"/>
-    <TextView
-        android:id="@+id/captionTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:isScrollContainer="true"
-        android:text="caption will show here"
-        android:textSize="18sp"/>
+        android:text="@string/next_button"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/primaryAccent"
+        android:layout_gravity="center_horizontal"
+        android:padding="12dp"
+        android:textSize="16sp"
+        android:onClick="onNextButtonClick"/>
 </LinearLayout>
