@@ -1,3 +1,4 @@
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,9 @@ class ChatAdapter(private val chatMessages: List<ChatMessageModel>) :
                 binding.messageText.setBackgroundResource(R.drawable.bg_chat_bubble_ai)
                 binding.root.layoutDirection = View.LAYOUT_DIRECTION_LTR
             }
+            val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+            val maxWidth = (screenWidth * 0.7).toInt()
+            binding.messageText.maxWidth = maxWidth
 
             if (!chatMessage.sectionLink.isNullOrEmpty()) {
                 binding.goToSectionButton.visibility = View.VISIBLE
