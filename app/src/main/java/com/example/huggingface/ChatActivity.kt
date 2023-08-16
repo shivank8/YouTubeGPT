@@ -1,11 +1,9 @@
 package com.example.huggingface
 
 import ChatAdapter
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.huggingface.databinding.ActivityChatBinding
@@ -13,7 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import kotlin.random.Random
 
 class ChatActivity : AppCompatActivity() {
 
@@ -83,7 +80,7 @@ class ChatActivity : AppCompatActivity() {
                 addAiResponse(summary)
                 addAiResponse("Try asking some questions related to this video.")
             } else {
-                addAiResponse("Hey there, \n Try asking some questions related to this video.")
+                addAiResponse("Hey there, \nTry asking some questions related to this video.")
             }
         }
     }

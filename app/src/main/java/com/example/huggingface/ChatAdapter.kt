@@ -1,8 +1,12 @@
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.huggingface.ChatMessageModel
 import com.example.huggingface.R
@@ -47,11 +51,20 @@ class ChatAdapter(private val chatMessages: List<ChatMessageModel>) :
             if (!chatMessage.sectionLink.isNullOrEmpty()) {
                 binding.goToSectionButton.visibility = View.VISIBLE
                 binding.goToSectionButton.setOnClickListener {
-                    // Handle "Go to Section" button click here
-                    Toast.makeText(itemView.context, "Go to Section button clicked", Toast.LENGTH_SHORT).show()
+                    openYouTubeApp(itemView.context, chatMessage.sectionLink)
                 }
             } else {
                 binding.goToSectionButton.visibility = View.GONE
+            }
+        }
+        private fun openYouTubeApp(context: Context, videoLink: String) {
+            try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoLink))
+                intent.setPackage("com.google.android.youtube")
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Log.e("Youtube app","Not found!")
+                // YouTube app is not installed, handle accordingly (e.g., open in browser)
             }
         }
     }
