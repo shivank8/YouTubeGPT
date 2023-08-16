@@ -25,6 +25,7 @@
         android:inputType="text"
         android:backgroundTint="@color/primaryAccent"
         android:padding="12dp"
+        android:text="Ggao9SKhWjU"
         android:layout_marginBottom="16dp"
         android:textColor="@color/primaryText"
         android:textColorHint="@color/secondaryText"
