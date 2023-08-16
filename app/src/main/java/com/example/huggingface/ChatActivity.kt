@@ -50,9 +50,7 @@ class ChatActivity : AppCompatActivity() {
             } else {
                 addAiResponse("Try asking some questions related to this video.")
             }
-
         }
-
     }
 
     private fun setupRecyclerView() {
@@ -84,7 +82,6 @@ class ChatActivity : AppCompatActivity() {
         chatAdapter.notifyItemInserted(chatMessages.size - 1)
         binding.chatRecyclerView.scrollToPosition(chatMessages.size - 1)
     }
-
 
     private fun getAnswer(question: String): String {
         val randomWords = listOf("conversation", "language", "generation", "virtual", "intelligence", "response")

@@ -23,30 +23,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//
+
           youtubeLink = findViewById(R.id.youtubeLinkInput)
-//        displayTextView = findViewById(R.id.displayTextView)
-//        captionTextView = findViewById(R.id.captionTextView)
-    }
-
-
-    fun onFetchCaptionsButtonClicked(view: View) {
-        val videoIds = "Ggao9SKhWjU"//"klTvEwg3oJ4"
-
-        CoroutineScope(Dispatchers.Main).launch {
-            val captions: String = ApiHelper.fetchYouTubeCaptions(videoIds)
-            val response: JSONArray = ApiHelper.getSummary(captions)
-
-            if (response.length() > 0) {
-                val resultArray = response.getJSONObject(0)
-                val summary=resultArray.getString("summary_text")
-                Log.v("res", resultArray.toString())
-                displayTextView.text = summary
-            } else {
-                displayTextView.text = "No results"
-            }
-
-        }
     }
 
     fun onNextButtonClick(view: View) {
