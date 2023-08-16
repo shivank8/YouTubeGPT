@@ -13,5 +13,6 @@
     <color name="primaryText">#FFFFFF</color>
     <color name="secondaryText">#B0B0B0</color>
     <color name="primaryAccent">#e50914</color>
-
+    <color name="userBubbleColor">#2ECC71</color>
+    <color name="aiBubbleColor">#3498DB</color>
 </resources>
