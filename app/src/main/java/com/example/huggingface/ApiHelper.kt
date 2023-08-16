@@ -38,7 +38,6 @@ class ApiHelper {
     }
 
     suspend fun fetchYouTubeCaptions(videoId: String): String {
-        println(youtubeApiKey)
         val request = buildRequest(youtubeApiUrl, youtubeApiKey, null, videoId)
 
         val response: JSONArray=performApiRequest(request)
@@ -86,7 +85,7 @@ class ApiHelper {
 
                 captions
             } catch (e: IOException) {
-                Log.e("ApiHelper", "Error fetching captions: ${e.message}")
+                Log.e("ApiHelper caption error", "Error fetching captions: ${e.message}")
                 ""
             }
         }
