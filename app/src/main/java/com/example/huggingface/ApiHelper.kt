@@ -15,10 +15,12 @@ import java.io.IOException
 import java.util.regex.Pattern
 
 class ApiHelper {
-    private val sentimentApiUrl = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-    private val sentimentApiToken = "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"
+    private val secrets=Secrets()
+    private val summaryApiUrl = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+    private val apiAccessToken = secrets.accessToken
 
     private val youtubeApiUrl = "https://youtube-video-subtitles-list.p.rapidapi.com/"
+    private val youtubeApiKey=secrets.youtubeApiKey
 
     private val client = OkHttpClient()
 
@@ -30,13 +32,14 @@ class ApiHelper {
         payload.put("inputs", input)
 
         val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), payload.toString())
-        val request = buildRequest(sentimentApiUrl, sentimentApiToken, requestBody)
+        val request = buildRequest(summaryApiUrl, apiAccessToken, requestBody)
 
         return performApiRequest(request)
     }
 
     suspend fun fetchYouTubeCaptions(videoId: String): String {
-        val request = buildRequest(youtubeApiUrl, "c625f8d054mshf1ad27456f28955p1e5836jsn6afc84eccd6d", null, videoId)
+        println(youtubeApiKey)
+        val request = buildRequest(youtubeApiUrl, youtubeApiKey, null, videoId)
 
         val response: JSONArray=performApiRequest(request)
         var captions=""
@@ -96,11 +99,10 @@ class ApiHelper {
             "inputs",
             JSONObject(mapOf("source_sentence" to inputQuery, "sentences" to dataList))
         )
-        val API_URL =
-            "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
+        val API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
 
         val requestBody = payload.toString().toRequestBody("application/json".toMediaTypeOrNull())
-        val request = buildRequest(API_URL, sentimentApiToken, requestBody)
+        val request = buildRequest(API_URL, apiAccessToken, requestBody)
 
         val output = performApiRequest(request)
         println(output)
@@ -112,13 +114,12 @@ class ApiHelper {
 
         for ((index, value) in topKEmbeddings) {
             println("Index: $index, Value: $value")// Index: 14, Value: 0.5087682604789734
-            val text =
-                dataList[index] // Look at this. If you can see this, it is very light purple. Looks very nice.
+            val text = dataList[index] // Look at this. If you can see this, it is very light purple. Looks very nice.
             println(text) // actual caption line
-//            result=text
             println(dictionary[text])// gives time, 56
         }
         val resultList = mutableListOf<String>()
+
         if(topKEmbeddings.isNotEmpty()) {
             val firstIndex = topKEmbeddings[0].first
             val text = dataList[firstIndex]
