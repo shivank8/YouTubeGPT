@@ -21,18 +21,53 @@ class ChatActivity : AppCompatActivity() {
     private val chatMessages = mutableListOf<ChatMessageModel>()
     private lateinit var chatAdapter: ChatAdapter
     private val ApiHelper = ApiHelper()
+    lateinit var videoId:String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setupRecyclerView()
-        val videoId = intent.getStringExtra("videoId")
+        videoId = intent.getStringExtra("videoId").toString()
         println(videoId)
-        if (videoId != null) {
-            Log.e("videoId", videoId)
-            getSummary(videoId)
+        Log.e("videoId", videoId)
+        getSummary(videoId)
+    }
+
+
+    private fun setupRecyclerView() {
+        chatAdapter = ChatAdapter(chatMessages)
+        binding.chatRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@ChatActivity)
+            adapter = chatAdapter
         }
+    }
+
+    fun onSendButtonClick(view: View) {
+        val userInput = binding.messageInput.text.toString()
+        if (userInput.isNotEmpty()) {
+            addUserMessage(userInput)
+            getAnswer(userInput) // Call your function to get AI response
+            binding.messageInput.text.clear()
+        }
+    }
+
+    private fun addUserMessage(message: String) {
+        chatMessages.add(ChatMessageModel(message, true))
+        chatAdapter.notifyItemInserted(chatMessages.size - 1)
+        binding.chatRecyclerView.scrollToPosition(chatMessages.size - 1)
+    }
+
+    private fun addAiResponse(message: String,sectionTiming:String="-1s") {
+        if(sectionTiming=="-1s")
+            chatMessages.add(ChatMessageModel(message, false,))
+        else{
+            val sectionUrl="https://www.youtube.com/watch?v=$videoId&t=$sectionTiming"
+            println(sectionUrl)
+            chatMessages.add(ChatMessageModel(message, false,sectionUrl))
+        }
+        chatAdapter.notifyItemInserted(chatMessages.size - 1)
+        binding.chatRecyclerView.scrollToPosition(chatMessages.size - 1)
     }
 
     private fun getSummary(videoId: String?) {
@@ -48,46 +83,16 @@ class ChatActivity : AppCompatActivity() {
                 addAiResponse(summary)
                 addAiResponse("Try asking some questions related to this video.")
             } else {
-                addAiResponse("Try asking some questions related to this video.")
+                addAiResponse("Hey there, \n Try asking some questions related to this video.")
             }
         }
     }
 
-    private fun setupRecyclerView() {
-        chatAdapter = ChatAdapter(chatMessages)
-        binding.chatRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@ChatActivity)
-            adapter = chatAdapter
+    private fun getAnswer(question: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val response = ApiHelper.getVectorEmbeddings(question)
+            addAiResponse(response[0],response[1])
         }
-    }
-
-    fun onSendButtonClick(view: View) {
-        val userInput = binding.messageInput.text.toString()
-        if (userInput.isNotEmpty()) {
-            addUserMessage(userInput)
-            val aiResponse = getAnswer(userInput) // Call your function to get AI response
-            addAiResponse(aiResponse)
-            binding.messageInput.text.clear()
-        }
-    }
-
-    private fun addUserMessage(message: String) {
-        chatMessages.add(ChatMessageModel(message, true))
-        chatAdapter.notifyItemInserted(chatMessages.size - 1)
-        binding.chatRecyclerView.scrollToPosition(chatMessages.size - 1)
-    }
-
-    private fun addAiResponse(message: String) {
-        chatMessages.add(ChatMessageModel(message, false,))
-        chatAdapter.notifyItemInserted(chatMessages.size - 1)
-        binding.chatRecyclerView.scrollToPosition(chatMessages.size - 1)
-    }
-
-    private fun getAnswer(question: String): String {
-        val randomWords = listOf("conversation", "language", "generation", "virtual", "intelligence", "response")
-        val randomIndex = Random.nextInt(randomWords.size)
-        val randomWord = randomWords[randomIndex]
-        return "$question What about $randomWord?"
     }
 
 }

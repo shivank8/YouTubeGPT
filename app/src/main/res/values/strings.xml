@@ -6,4 +6,5 @@
     <string name="app_logo_description">App Logo</string>
     <string name="message_hint">Type your message...</string>
     <string name="send_button_description">Send Button</string>
+    <string name="api_error">Something went wrong. Please try again!</string>
 </resources>

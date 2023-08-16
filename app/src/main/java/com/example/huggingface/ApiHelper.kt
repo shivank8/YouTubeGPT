@@ -11,7 +11,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.DataOutput
 import java.io.IOException
 import java.util.regex.Pattern
 
@@ -22,6 +21,9 @@ class ApiHelper {
     private val youtubeApiUrl = "https://youtube-video-subtitles-list.p.rapidapi.com/"
 
     private val client = OkHttpClient()
+
+    private var dictionary = mutableMapOf<String, Int>()
+    private lateinit var dataList: List<String>
 
     suspend fun getSummary(input: String): JSONArray {
         val payload = JSONObject()
@@ -65,7 +67,7 @@ class ApiHelper {
                 val pattern = Pattern.compile("""<text start="(\d+)" dur="\d+">([^<]+)</text>""")
                 val matcher = pattern.matcher(responseBody)
 
-                val dictionary = mutableMapOf<String, Int>()
+                //val dictionary = mutableMapOf<String, Int>()
 
                 while (matcher.find()) {
                     val start = matcher.group(1).toInt()
@@ -74,10 +76,9 @@ class ApiHelper {
                 }
                 println(dictionary)
                 val captions = dictionary.keys.joinToString(" ")
-                val dataList = dictionary.keys.toList()
+                dataList = dictionary.keys.toList()
                 println(dataList)
-                val query="what is the color?"
-                getVectorEmbeddings(dataList,query,dictionary)
+
                 Log.v("Final Captions", captions)
 
                 captions
@@ -89,10 +90,14 @@ class ApiHelper {
     }
 
 
-    private suspend fun getVectorEmbeddings(dataList: List<String>, inputQuery: String, dictionary: MutableMap<String, Int>) {
+    suspend fun getVectorEmbeddings(inputQuery: String): List<String> {
         val payload = JSONObject()
-        payload.put("inputs", JSONObject(mapOf("source_sentence" to inputQuery, "sentences" to dataList)))
-        val API_URL = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
+        payload.put(
+            "inputs",
+            JSONObject(mapOf("source_sentence" to inputQuery, "sentences" to dataList))
+        )
+        val API_URL =
+            "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2"
 
         val requestBody = payload.toString().toRequestBody("application/json".toMediaTypeOrNull())
         val request = buildRequest(API_URL, sentimentApiToken, requestBody)
@@ -106,11 +111,26 @@ class ApiHelper {
         val topKEmbeddings = getTopKValues(embeddings, 3)
 
         for ((index, value) in topKEmbeddings) {
-            println("Index: $index, Value: $value")
-            val text=dataList[index]
-            println(text)
-            println(dictionary[text])
+            println("Index: $index, Value: $value")// Index: 14, Value: 0.5087682604789734
+            val text =
+                dataList[index] // Look at this. If you can see this, it is very light purple. Looks very nice.
+            println(text) // actual caption line
+//            result=text
+            println(dictionary[text])// gives time, 56
         }
+        val resultList = mutableListOf<String>()
+        if(topKEmbeddings.isNotEmpty()) {
+            val firstIndex = topKEmbeddings[0].first
+            val text = dataList[firstIndex]
+            val sectionTime = (dictionary[text]).toString()
+            resultList.add(text)
+            resultList.add(sectionTime)
+        }
+        else{
+            resultList.add("Something went wrong. Please try again!")
+            resultList.add("-1s")
+        }
+        return resultList
     }
     private fun getTopKValues(values: List<Double>, top_k: Int): List<Pair<Int, Double>> {
 
