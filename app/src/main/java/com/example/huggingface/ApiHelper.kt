@@ -17,7 +17,7 @@ import java.util.regex.Pattern
 class ApiHelper {
     private val secrets=Secrets()
     private val summaryApiUrl = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-    private val apiAccessToken = secrets.accessToken
+    private val apiAccessToken = secrets.accessToken2
 
     private val youtubeApiUrl = "https://youtube-video-subtitles-list.p.rapidapi.com/"
     private val youtubeApiKey=secrets.youtubeApiKey
