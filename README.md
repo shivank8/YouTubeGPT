@@ -1,6 +1,5 @@
 # YouTube GPT Android App
 
-![App Demo](https://github.com/shivank8/YouTubeGPT/blob/master/Apk%20%26%20Demo/YoutubeGPT%20Demo.mp4)
 
 YouTube GPT is an Android app that allows users to generate video summaries using AI models. The app accepts YouTube links from users and provides video summaries through a chat-like interface.
 
@@ -12,7 +11,7 @@ YouTube GPT is an Android app that allows users to generate video summaries usin
 - User and AI message alignment for easy reading.
 - Modern and user-friendly UI/UX design.
 
-## Demo video
+## App Demo
 
 
 https://github.com/shivank8/YouTubeGPT/assets/64694508/08211bbb-5f40-4e8a-8cb5-aba7778c4748
