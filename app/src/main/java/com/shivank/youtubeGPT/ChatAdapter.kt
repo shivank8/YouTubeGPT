@@ -8,9 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.huggingface.ChatMessageModel
-import com.example.huggingface.R
-import com.example.huggingface.databinding.ItemChatMessageBinding
+import com.shivank.youtubeGPT.ChatMessageModel
+import com.shivank.youtubeGPT.R
+import com.shivank.youtubeGPT.databinding.ItemChatMessageBinding
 
 class ChatAdapter(private val chatMessages: List<ChatMessageModel>) :
     RecyclerView.Adapter<ChatAdapter.ViewHolder>() {

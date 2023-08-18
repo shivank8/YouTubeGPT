@@ -1,4 +1,4 @@
-package com.example.huggingface
+package com.shivank.youtubeGPT
 
 data class ChatMessageModel (
     val message: String,

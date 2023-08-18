@@ -1,4 +1,4 @@
-package com.example.huggingface
+package com.shivank.youtubeGPT
 
 import org.junit.Test
 

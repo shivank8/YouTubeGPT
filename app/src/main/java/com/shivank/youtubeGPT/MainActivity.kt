@@ -1,4 +1,4 @@
-package com.example.huggingface
+package com.shivank.youtubeGPT
 
 import android.content.Intent
 import android.os.Bundle

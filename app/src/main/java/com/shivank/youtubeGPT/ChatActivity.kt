@@ -1,4 +1,4 @@
-package com.example.huggingface
+package com.shivank.youtubeGPT
 
 import ChatAdapter
 import android.os.Bundle
@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.huggingface.databinding.ActivityChatBinding
+import com.shivank.youtubeGPT.databinding.ActivityChatBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

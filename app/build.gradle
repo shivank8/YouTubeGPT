@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.huggingface'
+    namespace 'com.shivank.youtubeGPT'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.huggingface"
+        applicationId "com.shivank.youtubeGPT"
         minSdk 24
         targetSdk 33
         versionCode 1
