@@ -88,7 +88,7 @@ class ApiHelper {
             }
         }
     }
-    fun decodeHtmlEntities(input: String): String {
+    private fun decodeHtmlEntities(input: String): String {
         val htmlEntities = mapOf(
             "&amp;" to "&",
             "&lt;" to "<",
