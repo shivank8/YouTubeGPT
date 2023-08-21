@@ -13,7 +13,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
-
 class ApiHelper {
     private val secrets=Secrets()
     private val summaryApiUrl = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
@@ -24,7 +23,7 @@ class ApiHelper {
 
     private val client = OkHttpClient()
 
-    private var dictionary = mutableMapOf<String, Int>()
+    private var dictionary = mutableMapOf<String, Double>()
     private lateinit var dataList: List<String>
 
     suspend fun getSummary(input: String): JSONArray {
@@ -64,16 +63,15 @@ class ApiHelper {
             val client = OkHttpClient()
             try {
                 val response = client.newCall(request).execute()
-                var responseBody = response.body?.string() ?: ""
+                val responseStr = response.body?.string() ?: ""
+                var responseBody = decodeHtmlEntities(responseStr)
                 responseBody=responseBody.substring(39)
-                val pattern = Pattern.compile("""<text start="(\d+)" dur="\d+">([^<]+)</text>""")
+                val pattern = Pattern.compile("""<text start="([0-9]+(?:\.[0-9]+)?)\" dur="([0-9]+(?:\.[0-9]+)?)\">([^<]+)</text>""")
                 val matcher = pattern.matcher(responseBody)
 
-                //val dictionary = mutableMapOf<String, Int>()
-
                 while (matcher.find()) {
-                    val start = matcher.group(1).toInt()
-                    val text = matcher.group(2)
+                    val start = matcher.group(1).toDouble()
+                    val text = matcher.group(3)
                     dictionary[text as String] = start
                 }
                 println(dictionary)
@@ -90,7 +88,22 @@ class ApiHelper {
             }
         }
     }
+    fun decodeHtmlEntities(input: String): String {
+        val htmlEntities = mapOf(
+            "&amp;" to "&",
+            "&lt;" to "<",
+            "&gt;" to ">",
+            "&quot;" to "\"",
+            "&#39;" to "'"
+        )
 
+        var decoded = input
+        for ((entity, value) in htmlEntities) {
+            decoded = decoded.replace(entity, value)
+        }
+
+        return decoded
+    }
 
     suspend fun getVectorEmbeddings(inputQuery: String): List<String> {
         val payload = JSONObject()
@@ -124,7 +137,7 @@ class ApiHelper {
             val text = dataList[firstIndex]
             val sectionTime = (dictionary[text]).toString()
             resultList.add(text)
-            resultList.add(sectionTime)
+            resultList.add(sectionTime.substringBefore("."))
         }
         else{
             resultList.add("Something went wrong. Please try again!")

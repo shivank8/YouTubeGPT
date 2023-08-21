@@ -71,16 +71,19 @@ class ChatActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             val captions: String = ApiHelper.fetchYouTubeCaptions(videoId!!)
             val response: JSONArray = ApiHelper.getSummary(captions)
-
-            if (response.length() > 0) {
-                val resultArray = response.getJSONObject(0)
-                var summary="The summary of the video is: \n"
-                summary+=resultArray.getString("summary_text")
-                Log.v("res", resultArray.toString())
-                addAiResponse(summary)
-                addAiResponse("Try asking some questions related to this video.")
+            if (captions.isNotEmpty()) {
+                if (response.length() > 0) {
+                    val resultArray = response.getJSONObject(0)
+                    var summary = "The summary of the video is: \n"
+                    summary += resultArray.getString("summary_text")
+                    Log.v("res", resultArray.toString())
+                    addAiResponse(summary)
+                    addAiResponse("Try asking some questions related to this video.")
+                } else {
+                    addAiResponse("Hey there, \nTry asking some questions related to this video.")
+                }
             } else {
-                addAiResponse("Hey there, \nTry asking some questions related to this video.")
+                Log.e("captions","No captions")
             }
         }
     }
